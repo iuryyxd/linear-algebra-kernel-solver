@@ -1,0 +1,31 @@
+============================================================
+TRABALHO DE ÁLGEBRA LINEAR A (MATA07) - UFBA
+ASSUNTO: Cálculo da Base e Dimensão do Kernel
+ALUNO: Iury Silva de Sena
+============================================================
+
+1. ARQUIVOS ENVIADOS:
+---------------------
+- main.c (Código-fonte do projeto)
+- leia-aqui.txt (Este guia de instruções)
+
+2. COMO COMPILAR E EXECUTAR:
+----------------------------
+O programa foi desenvolvido em C. Recomendo o uso do GCC para compilar.
+
+PASSO A PASSO NO TERMINAL (Windows/Linux/macOS):
+1. Abra o terminal na pasta onde salvou o arquivo 'main.c'.
+2. Compile o código com o comando:
+   gcc main.c -o kernel_solver
+3. Execute o programa:
+   - No Windows: kernel_solver.exe ou kernel_solver
+   - No Linux/Mac: ./kernel_solver
+
+3. EXEMPLO DE USO:
+------------------
+Ao iniciar, o programa solicitará:
+1. Número de linhas (ex: 1)
+2. Número de colunas (ex: 4)
+3. Elementos da matriz (ex: 1 1 1 1)
+
+O programa retornará a Dimensão do Kernel e os vetores da base.
