@@ -18,7 +18,7 @@ PASSO A PASSO NO TERMINAL (Windows/Linux/macOS):
 2. Compile o código com o comando:
    gcc main.c -o kernel_solver
 3. Execute o programa:
-   - No Windows: kernel_solver.exe ou kernel_solver
+   - No Windows: kernel_solver.exe ou kernel_solver ou .\kernel_solver
    - No Linux/Mac: ./kernel_solver
 
 3. EXEMPLO DE USO:
