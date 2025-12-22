@@ -21,6 +21,8 @@ gcc main.c -o kernel_solver
 
 # Rodar
 ./kernel_solver
+# ou somente:
+kernel_solver  # (se estiver no Windows)
 ```
 
 ## Como Usar o Programa
