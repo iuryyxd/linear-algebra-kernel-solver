@@ -29,22 +29,16 @@ gcc main.c -o kernel_solver
 
 Ao iniciar o programa, informe primeiro o número de **linhas** e, em seguida, o número de **colunas** da matriz.
 
-![Passo 1: Definindo dimensões](images/passo-1.png)
+![Passo 1: Definindo dimensõe](images/passo-2.png)
 
 ### 2. Inserir os Dados da Matriz
 
 Digite os valores da matriz em ordem. O programa aceita separação por espaços ou quebras de linha.
 
-![Passo 2: Inserindo valores](images/passo-2.png)
+![Passo 2: Inserindo valores](images/passo-3.png)
 
-### 3. Visualizar a Dimensão
+### 3. Obter o Resultado Final
 
-Após o processamento via eliminação gaussiana e substituição regressiva, o programa informará a **Dimensão do Kernel** (o número de variáveis livres).
+Após o processamento via eliminação gaussiana e substituição regressiva, o programa informará a **Dimensão do Kernel** (o número de variáveis livres). O programa exibirá os vetores que compõem a **Base do Kernel**. Cada vetor é apresentado entre parênteses.
 
-![Passo 3: Exibição da dimensão](images/passo-3.png)
-
-### 4. Obter o Resultado Final (Base)
-
-O programa exibirá os vetores que compõem a **Base do Kernel**. Cada vetor é apresentado entre parênteses.
-
-![Passo 4: Resultado da base](images/passo-4.png)
+![Passo 3: Resultado](images/passo-4.png)
