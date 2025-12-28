@@ -4,27 +4,11 @@
 
 #define real double
 
-void transformarParaMatriz(real *matrizEntrada, int numLinhas, int numColunas, real matriz[numLinhas][numColunas])
-{
-    int j = 0;
-    for (int i = 0; i < numLinhas; i++)
-    {
-        int k = 0;
-        while (k < numColunas)
-        {
-            matriz[i][k] = matrizEntrada[j + k];
-            k++;
-        }
-
-        j += numColunas;
-    }
-}
-
-int descerLinhas(int numLinhas, int numColunas, real matriz[numLinhas][numColunas], int linhaAtual, int colunaAtual)
+int descerLinhas(int numLinhas, int numColunas, real *matriz, int linhaAtual, int colunaAtual)
 {
     for (int i = linhaAtual; i < numLinhas; i++)
     {
-        if (matriz[i][colunaAtual] != 0)
+        if (matriz[i * numColunas + colunaAtual] != 0)
         {
             return i;
         }
@@ -33,17 +17,17 @@ int descerLinhas(int numLinhas, int numColunas, real matriz[numLinhas][numColuna
     return -1;
 }
 
-void trocarLinhas(int numLinhas, int numColunas, real matriz[numLinhas][numColunas], int linha1, int linha2)
+void trocarLinhas(int numColunas, real *matriz, int linha1, int linha2)
 {
     for (int i = 0; i < numColunas; i++)
     {
-        real temp = matriz[linha1][i];
-        matriz[linha1][i] = matriz[linha2][i];
-        matriz[linha2][i] = temp;
+        real temp = matriz[linha1 * numColunas + i];
+        matriz[linha1 * numColunas + i] = matriz[linha2 * numColunas + i];
+        matriz[linha2 * numColunas + i] = temp;
     }
 }
 
-void escalonar(int numLinhas, int numColunas, real matriz[numLinhas][numColunas], int linhaAtual, bool variaveis[numColunas])
+void escalonar(int numLinhas, int numColunas, real *matriz, int linhaAtual, bool *variaveis)
 {
     bool temPivo = false;
     int pivoX = -1;
@@ -56,7 +40,7 @@ void escalonar(int numLinhas, int numColunas, real matriz[numLinhas][numColunas]
         if (indice != -1)
         {
             if (indice != linhaAtual)
-                trocarLinhas(numLinhas, numColunas, matriz, linhaAtual, indice);
+                trocarLinhas(numColunas, matriz, linhaAtual, indice);
             pivoX = linhaAtual;
             pivoY = j;
             variaveis[j] = true;
@@ -72,11 +56,11 @@ void escalonar(int numLinhas, int numColunas, real matriz[numLinhas][numColunas]
     {
         for (int i = linhaAtual + 1; i < numLinhas; i++)
         {
-            real fator = matriz[i][j] / matriz[pivoX][pivoY];
+            real fator = matriz[i * numColunas + j] / matriz[pivoX * numColunas + pivoY];
 
             for (int k = j; k < numColunas; k++)
             {
-                matriz[i][k] = matriz[i][k] - (fator * matriz[pivoX][k]);
+                matriz[i * numColunas + k] = matriz[i * numColunas + k] - (fator * matriz[pivoX * numColunas + k]);
             }
         }
     }
@@ -88,16 +72,19 @@ int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
     if (numLinhas < numColunas)
         numLinhas = numColunas;
 
-    real matriz[numLinhas][numColunas];
-    for (int i = 0; i < numLinhas; i++)
+    real matriz[numLinhas * numColunas];
+    for (int i = 0; i < numLinhas * numColunas; i++)
+    {
+        matriz[i] = 0.0;
+    }
+
+    for (int i = 0; i < originalNumLinhas; i++)
     {
         for (int j = 0; j < numColunas; j++)
         {
-            matriz[i][j] = 0.0;
+            matriz[i * numColunas + j] = matrizEntrada[i * numColunas + j];
         }
     }
-
-    transformarParaMatriz(matrizEntrada, originalNumLinhas, numColunas, matriz);
 
     // Array para indicar quais são as variáveis livres ou presas
     bool variaveis[numColunas];
@@ -124,13 +111,10 @@ int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
     }
 
     // Achar as possiveis bases para o Kernel
-    real vetorBase[numColunas][countVarLivres];
-    for (int i = 0; i < numColunas; i++)
+    real vetorBase[numColunas * countVarLivres];
+    for (int i = 0; i < numColunas * countVarLivres; i++)
     {
-        for (int j = 0; j < countVarLivres; j++)
-        {
-            vetorBase[i][j] = 0.0;
-        }
+        vetorBase[i] = 0.0;
     }
 
     if (countVarLivres > 0)
@@ -152,7 +136,7 @@ int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
 
                 for (int k = 0; k < numColunas; k++)
                 {
-                    if (matriz[j][k] != 0)
+                    if (matriz[j * numColunas + k] != 0)
                     {
                         temPivo = true;
                         pivoY = k;
@@ -165,14 +149,14 @@ int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
                     real soma = 0.0;
                     for (int k = pivoY + 1; k < numColunas; k++)
                     {
-                        soma += matriz[j][k] * coeficientes[k];
+                        soma += matriz[j * numColunas + k] * coeficientes[k];
                     }
-                    coeficientes[pivoY] = -soma / matriz[j][pivoY];
+                    coeficientes[pivoY] = -soma / matriz[j * numColunas + pivoY];
                 }
             }
             for (int j = 0; j < numColunas; j++)
             {
-                vetorBase[j][i] = coeficientes[j];
+                vetorBase[i * numColunas + j] = coeficientes[j];
             }
             coeficientes[indicesVarLivres[i]] = 0.0;
         }
@@ -184,7 +168,7 @@ int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
     {
         for (int j = 0; j < numColunas; j++)
         {
-            baseKernel[i * numColunas + j] = vetorBase[j][i];
+            baseKernel[i * numColunas + j] = vetorBase[i * numColunas + j];
         }
     }
 
