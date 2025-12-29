@@ -66,23 +66,13 @@ void escalonar(int numLinhas, int numColunas, real *matriz, int linhaAtual, bool
     }
 }
 
-int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
+int Ker(real *matrizEntrada, real *matrizEscalonada, real *baseKernel, int numLinhas, int numColunas)
 {
-    int originalNumLinhas = numLinhas;
-    if (numLinhas < numColunas)
-        numLinhas = numColunas;
-
-    real matriz[numLinhas * numColunas];
-    for (int i = 0; i < numLinhas * numColunas; i++)
-    {
-        matriz[i] = 0.0;
-    }
-
-    for (int i = 0; i < originalNumLinhas; i++)
+    for (int i = 0; i < numLinhas; i++)
     {
         for (int j = 0; j < numColunas; j++)
         {
-            matriz[i * numColunas + j] = matrizEntrada[i * numColunas + j];
+            matrizEscalonada[i * numColunas + j] = matrizEntrada[i * numColunas + j];
         }
     }
 
@@ -95,7 +85,7 @@ int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
 
     for (int i = 0; i < numLinhas; i++)
     {
-        escalonar(numLinhas, numColunas, matriz, i, variaveis);
+        escalonar(numLinhas, numColunas, matrizEscalonada, i, variaveis);
     }
 
     // Achar variáveis livres
@@ -136,7 +126,7 @@ int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
 
                 for (int k = 0; k < numColunas; k++)
                 {
-                    if (matriz[j * numColunas + k] != 0)
+                    if (matrizEscalonada[j * numColunas + k] != 0)
                     {
                         temPivo = true;
                         pivoY = k;
@@ -149,9 +139,9 @@ int Ker(real *matrizEntrada, real *baseKernel, int numLinhas, int numColunas)
                     real soma = 0.0;
                     for (int k = pivoY + 1; k < numColunas; k++)
                     {
-                        soma += matriz[j * numColunas + k] * coeficientes[k];
+                        soma += matrizEscalonada[j * numColunas + k] * coeficientes[k];
                     }
-                    coeficientes[pivoY] = -soma / matriz[j * numColunas + pivoY];
+                    coeficientes[pivoY] = -soma / matrizEscalonada[j * numColunas + pivoY];
                 }
             }
             for (int j = 0; j < numColunas; j++)
@@ -184,6 +174,7 @@ int main()
     scanf("%d", &numColunas);
 
     real matrizEntrada[numLinhas * numColunas];
+    real matrizEscalonada[numLinhas * numColunas];
 
     printf("Digite a matriz (%d linhas x %d colunas),\n", numLinhas, numColunas);
     printf("informando os %d valores em ordem, separados por espacos/linhas:\n", numLinhas * numColunas);
@@ -196,7 +187,21 @@ int main()
     }
 
     real baseKernel[numColunas * numColunas];
-    int dim = Ker(matrizEntrada, baseKernel, numLinhas, numColunas);
+    int dim = Ker(matrizEntrada, matrizEscalonada, baseKernel, numLinhas, numColunas);
+
+    printf("Matriz escalonada:\n");
+    for (int i = 0; i < numLinhas; i++)
+    {
+        printf("( ");
+        for (int j = 0; j < numColunas; j++)
+        {
+            real valor = matrizEscalonada[i * numColunas + j];
+            if (valor > -0.000001 && valor < 0.000001)
+                valor = 0.000000;
+            printf("%f ", valor);
+        }
+        printf(")\n");
+    }
 
     printf("Dimensao do Kernel: %d\n", dim);
     printf("Base(s) do Kernel:\n");
